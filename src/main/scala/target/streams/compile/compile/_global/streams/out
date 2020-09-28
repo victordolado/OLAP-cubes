@@ -1,0 +1,31 @@
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Consumer.scala:3:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.kafka.clients.consumer.KafkaConsumer[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Consumer.scala:15:19: not found: type KafkaConsumer[0m
+[0m[[0m[31merror[0m] [0m[0m    val consumer: KafkaConsumer[String, String] = new KafkaConsumer[String, String](props)[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Consumer.scala:15:55: not found: type KafkaConsumer[0m
+[0m[[0m[31merror[0m] [0m[0m    val consumer: KafkaConsumer[String, String] = new KafkaConsumer[String, String](props)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Producer.scala:3:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.kafka.clients.producer._[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Producer.scala:14:26: not found: type KafkaProducer[0m
+[0m[[0m[31merror[0m] [0m[0m      val producer = new KafkaProducer[String, String](props)[0m
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/Producer.scala:15:24: not found: type ProducerRecord[0m
+[0m[[0m[31merror[0m] [0m[0m      val record = new ProducerRecord[String, String](topic, cols(0), cols(6))[0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/StreamingProgram.scala:4:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.SparkContext[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/StreamingProgram.scala:5:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.SparkConf[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/StreamingProgram.scala:12:18: not found: type SparkConf[0m
+[0m[[0m[31merror[0m] [0m[0m  val conf = new SparkConf().setAppName("streamingApp").setMaster("yarn-cluster")[0m
+[0m[[0m[31merror[0m] [0m[0m                 ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/usuario/Documentos/repositories/OLAP-cubes/src/main/scala/StreamingProgram.scala:13:16: not found: type SparkContext[0m
+[0m[[0m[31merror[0m] [0m[0m  val sc = new SparkContext(conf)[0m
+[0m[[0m[31merror[0m] [0m[0m               ^[0m
+[0m[[0m[31merror[0m] [0m[0m10 errors found[0m
