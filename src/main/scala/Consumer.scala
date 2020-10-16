@@ -32,6 +32,16 @@ class Consumer {
     val values = stream.map(record=>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
     values.saveAsTextFiles("hdfs:/taxiData", "parquet")
 
+    val transformedValues = stream.map(record => (record.key, Tuple4(
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
+      1)))
+      .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + x._1.toFloat, x._2.toFloat+y._2.toFloat, x._3.toFloat+y._3.toFloat, x._4+y._4))
+        .map(x => (x._2._1/x._2._4, x._2._2/x._2._4, x._2._3/x._2._4)).collect().foreach(println))
+
+    print(transformedValues)
+    
     ssc.start()
     ssc.awaitTermination()
   }

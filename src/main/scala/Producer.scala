@@ -6,8 +6,8 @@ import org.apache.kafka.clients.producer._
 import org.json4s.DefaultFormats
 import com.google.gson.Gson
 
-case class Json(day: String, tpep_pickup_datetime: String, tpep_dropoff_datetime: String, passenger_count: Integer,
-                trip_distance: Float, total_amount: Float)
+case class Json(tpep_pickup_datetime: String, tpep_dropoff_datetime: String, passenger_count: Double,
+                trip_distance: Double, total_amount: Double)
 
 class Producer {
 
@@ -18,10 +18,10 @@ class Producer {
       val day = cols(1).split(" ")(0)
       val tpep_pickup_datetime = cols(1).split(" ")(1)
       val tpep_dropoff_datetime = cols(2).split(" ")(1)
-      val passenger_count = cols(3).toInt
+      val passenger_count = cols(3).toFloat
       val trip_distance = cols(4).toFloat
       val total_amount = cols(16).toFloat
-      val dataToSend = Json(day, tpep_pickup_datetime, tpep_dropoff_datetime,passenger_count, trip_distance, total_amount)
+      val dataToSend = Json(tpep_pickup_datetime, tpep_dropoff_datetime,passenger_count, trip_distance, total_amount)
       val gson = new Gson
       val jsonString = gson.toJson(dataToSend)
       val props = new Properties()
@@ -29,7 +29,7 @@ class Producer {
       props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
       props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
       val producer = new KafkaProducer[String, String](props)
-      val record = new ProducerRecord[String, String](topic, cols(0), jsonString)
+      val record = new ProducerRecord[String, String](topic, day, jsonString)
       producer.send(record)
       producer.close()
     }
