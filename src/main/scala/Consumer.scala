@@ -35,7 +35,7 @@ class Consumer {
     values.print()
     values.saveAsTextFiles("hdfs:/taxiData", "parquet")
 
-    val transformedValues = stream.map(record => (record.key, Tuple5(
+    stream.map(record => (record.key, Tuple5(
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
@@ -49,7 +49,7 @@ class Consumer {
         .map(x => (x._2._1/x._2._5,
           x._2._2/x._2._5,
           x._2._3/x._2._5,
-          x._2._4/x._2._5)).collect().foreach(println))
+          x._2._4/x._2._5)).saveAsTextFile("hdfs:/taxiTransformedData"))
 
 
     ssc.start()
