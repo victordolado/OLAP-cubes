@@ -7,6 +7,8 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import java.time._
+
 class Consumer {
 
   def consumeFromKafka(topic: String) {
@@ -30,18 +32,26 @@ class Consumer {
     )
 
     val values = stream.map(record=>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
+    values.print()
     values.saveAsTextFiles("hdfs:/taxiData", "parquet")
 
-    val transformedValues = stream.map(record => (record.key, Tuple4(
+    val transformedValues = stream.map(record => (record.key, Tuple5(
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
       1)))
-      .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + x._1.toFloat, x._2.toFloat+y._2.toFloat, x._3.toFloat+y._3.toFloat, x._4+y._4))
-        .map(x => (x._2._1/x._2._4, x._2._2/x._2._4, x._2._3/x._2._4)).collect().foreach(println))
+      .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + y._1.toFloat,
+        x._2.toFloat + y._2.toFloat,
+        x._3.toFloat + y._3.toFloat,
+        x._4.toFloat+y._4.toFloat,
+        x._5+y._5))
+        .map(x => (x._2._1/x._2._5,
+          x._2._2/x._2._5,
+          x._2._3/x._2._5,
+          x._2._4/x._2._5)).collect().foreach(println))
 
-    print(transformedValues)
-    
+
     ssc.start()
     ssc.awaitTermination()
   }
