@@ -1,19 +1,31 @@
 package consumer
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import java.time._
+import com.mongodb.spark.sql._
+import org.apache.spark.sql.SQLContext
+
 
 class Consumer {
 
   def consumeFromKafka(topic: String) {
     val conf = new SparkConf().setAppName("streamingApp").setMaster("local[4]")
-      .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020").set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020");
+      .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
+      .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
+      .set("mapreduce.fileoutputcommitter.algorithm.version", "2")
+      .set("spark.mongodb.input.uri", "mongodb://localhost:27017/")
+      .set("spark.mongodb.output.uri", "mongodb://localhost:27017/")
+      .set("spark.mongodb.input.database", "local")
+      .set("spark.mongodb.input.collection", "prueba")
+      .set("spark.mongodb.output.database", "local")
+      .set("spark.mongodb.output.collection", "prueba")
+      .set("spark.app.id", "Mongo")
+
     val sc = new SparkContext(conf)
     val ssc = new StreamingContext(sc, Seconds(1))
     val kafkaParams = Map[String, Object](
@@ -32,24 +44,27 @@ class Consumer {
     )
 
     val values = stream.map(record=>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
-    values.print()
     values.saveAsTextFiles("hdfs:/taxiData", "parquet")
 
-    stream.map(record => (record.key, Tuple5(
-      parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
-      parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
-      parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
-      parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
-      1)))
-      .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + y._1.toFloat,
-        x._2.toFloat + y._2.toFloat,
-        x._3.toFloat + y._3.toFloat,
-        x._4.toFloat+y._4.toFloat,
-        x._5+y._5))
-        .map(x => (x._2._1/x._2._5,
-          x._2._2/x._2._5,
-          x._2._3/x._2._5,
-          x._2._4/x._2._5)).saveAsTextFile("hdfs:/taxiTransformedData"))
+    val sqlContext = new SQLContext(sc)
+    import sqlContext.implicits._
+
+
+      stream.map(record => (record.key, Tuple5(
+        parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
+        parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
+        parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
+        parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
+        1)))
+        .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + y._1.toFloat,
+          x._2.toFloat + y._2.toFloat,
+          x._3.toFloat + y._3.toFloat,
+          x._4.toFloat+y._4.toFloat,
+          x._5+y._5))
+          .map(x => (x._2._1/x._2._5,
+            x._2._2/x._2._5,
+            x._2._3/x._2._5,
+            x._2._4/x._2._5)).toDF("travelTimeAvg", "passengerAvg", "tripDistanceAvg", "totalAmountAvg").write.mode("append").mongo())
 
 
     ssc.start()
