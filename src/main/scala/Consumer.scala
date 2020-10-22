@@ -1,5 +1,6 @@
 package consumer
 
+import org.apache.spark.sql.functions._
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
@@ -49,23 +50,24 @@ class Consumer {
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
 
-
-      stream.map(record => (record.key, Tuple5(
-        parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
-        parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
-        parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
-        parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
-        1)))
-        .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + y._1.toFloat,
-          x._2.toFloat + y._2.toFloat,
-          x._3.toFloat + y._3.toFloat,
-          x._4.toFloat+y._4.toFloat,
-          x._5+y._5))
-          .map(x => (x._2._1/x._2._5,
-            x._2._2/x._2._5,
-            x._2._3/x._2._5,
-            x._2._4/x._2._5)).toDF("travelTimeAvg", "passengerAvg", "tripDistanceAvg", "totalAmountAvg").write.mode("append").mongo())
-
+    stream.map(record => (record.key, Tuple5(
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("passenger_count"),
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("trip_distance"),
+      parse(record.value()).values.asInstanceOf[Map[String, Double]]("total_amount"),
+      1)))
+      .foreachRDD(rdd => rdd.reduceByKey((x, y) => (x._1.toFloat + y._1.toFloat,
+        x._2.toFloat + y._2.toFloat,
+        x._3.toFloat + y._3.toFloat,
+        x._4.toFloat + y._4.toFloat,
+        x._5 + y._5))
+        .map(x => (x._1,
+          x._2._1/x._2._5,
+          x._2._2/x._2._5,
+          x._2._3/x._2._5,
+          x._2._4/x._2._5))
+        .toDF("Day","travelTimeAvg(Min)", "passengerAvg", "tripDistanceAvg(Miles)", "totalAmountAvg(USD)")
+        .withColumn("Day",to_date($"Day", "yyy-MM-dd")).write.mode("append").mongo())
 
     ssc.start()
     ssc.awaitTermination()

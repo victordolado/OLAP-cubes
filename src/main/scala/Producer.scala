@@ -7,8 +7,7 @@ import org.apache.kafka.clients.producer._
 import org.json4s.DefaultFormats
 import com.google.gson.Gson
 
-case class Json(diff_pickup_dropoff: Double, passenger_count: Double,
-                trip_distance: Double, total_amount: Double)
+case class Json(diff_pickup_dropoff: Double, passenger_count: Double, trip_distance: Double, total_amount: Double)
 
 class Producer {
 
@@ -29,6 +28,7 @@ class Producer {
       val passenger_count = cols(3).toFloat
       val trip_distance = cols(4).toFloat
       val total_amount = cols(16).toFloat
+
       val dataToSend = Json(diff_pickup_dropoff, passenger_count, trip_distance, total_amount)
       val gson = new Gson
       val jsonString = gson.toJson(dataToSend)
