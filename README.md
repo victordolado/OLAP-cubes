@@ -25,5 +25,6 @@ One of the most expensive processes in Big Data environments and analytics envir
 
 Move to root directory and run the following commands in the terminal
 
-    `sbt compile`
-    `sbt run target/scala-2.12/classes/KafkaStreaming/StreamingProgram.class`
+`sbt compile`
+
+`sbt run target/scala-2.12/classes/KafkaStreaming/StreamingProgram.class`
