@@ -47,10 +47,10 @@ Una vez enviados al topic son leídos y procesados. El procesamiento consta de d
 
 1. Por un lado se guardan los datos en bruto en HDFS en el directorio raíz con el nombre de taxiData en formato parquet. 
 
-   ![](/src/main/images/taxiDataHDFS.png)
+   ![](/src/main/docImages/taxiDataHDFS.png)
 
-   ![HDFSDataValues](/src/main/images/HDFSDataValues.png)
+   ![HDFSDataValues](/src/main/docImages/HDFSDataValues.png)
 
 2. Por otro lado se realizan las siguientes transformaciones. Se agrupa por la clave "día" y se calcula **la media de la duración de los trayectos**, **la media de los pasajeros por trayecto**, **la distancia media de los trayectos** y **la media del precio de cada trayecto**. Posteriormente estas transformaciones son ingestadas en MongoDB en la colección de OLAPCubes.
 
-<img src="/src/main/images/mongoDBOLAP.png" alt="mongoDBOLAP" style="zoom: 80%;" />
+<img src="/src/main/docImages/mongoDBOLAP.png" alt="mongoDBOLAP" style="zoom: 80%;" />
