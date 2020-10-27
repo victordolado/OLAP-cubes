@@ -31,26 +31,35 @@ Move to root directory and run the following commands in the terminal
 
 ### Program description and expected results
 
-Los datos se almacenan en el fichero situado en la siguiente ruta:
+The initial data is stored in the following path:
 
 ​		`src/main/source/yellow_taxis_resume.csv`
 
-Se seleccionan las siguientes columnas del fichero csv: 
+The following columns are selected from the csv file:
 
-Se cogen las columnas siguientes: **diff_pickup_dropoff**, **passenger_count**, **trip_distance** y **total_amount**. 
+* **diff_pickup_dropoff**
+* **passenger_count**
+* **trip_distance**
+* **total_amount** 
 
-Se realiza un parseo básico de los datos para enviarlos al topic de kafka llamado "taxiTopic" con el siguiente formato:
+A basic parsing of the data is carried out to send them to the kafka topic called "taxiTopic" with the following format:
 
 <img src="/src/main/docImages/taxiTopicAllData.png" alt="taxiTopicAllData" style="zoom:67%;" />
 
-Una vez enviados al topic son leídos y procesados. El procesamiento consta de dos partes:
+Once the data is sent to the topic, it is processed. The processing consists of two parts:
 
-1. Por un lado se guardan los datos en bruto en HDFS en el directorio raíz con el nombre de taxiData en formato parquet. 
+1. On the one hand, the raw data is saved in HDFS in the root directory with the name of taxiData in Parquet format. 
 
    ![](/src/main/docImages/taxiDataHDFS.png)
 
    ![HDFSDataValues](/src/main/docImages/HDFSDataValues.png)
 
-2. Por otro lado se realizan las siguientes transformaciones. Se agrupa por la clave "día" y se calcula **la media de la duración de los trayectos**, **la media de los pasajeros por trayecto**, **la distancia media de los trayectos** y **la media del precio de cada trayecto**. Posteriormente estas transformaciones son ingestadas en MongoDB en la colección de OLAPCubes.
+2. On the other hand, the following transformations are carried out. The data is grouped by the "day" key and then the following calculations are done:
+* **The average of each trip duration**
+* **The average of the number of passengers per trip**
+* **The average of each trip distance**
+* **The average of each trip price**
+
+Then, these transformations are ingested in MongoDB in the OLAPCubes collection.
 
 <img src="/src/main/docImages/mongoDBOLAP.png" alt="mongoDBOLAP" style="zoom: 80%;" />
