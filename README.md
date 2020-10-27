@@ -41,7 +41,7 @@ Se cogen las columnas siguientes: **diff_pickup_dropoff**, **passenger_count**, 
 
 Se realiza un parseo básico de los datos para enviarlos al topic de kafka llamado "taxiTopic" con el siguiente formato:
 
-(Foto)
+<img src="/src/main/docImages/taxiTopicAllData.png" alt="taxiTopicAllData" style="zoom:67%;" />
 
 Una vez enviados al topic son leídos y procesados. El procesamiento consta de dos partes:
 
