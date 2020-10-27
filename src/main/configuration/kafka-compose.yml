@@ -26,3 +26,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zoo1
+
+  mongodb:
+    image: mongo:4.0.4
+    ports:
+      -   "27017:27017"
+      -   "27018:27018"
+      -   "27019:27019"
