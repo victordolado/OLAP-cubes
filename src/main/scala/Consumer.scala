@@ -22,9 +22,9 @@ class Consumer {
       .set("spark.mongodb.input.uri", "mongodb://localhost:27017/")
       .set("spark.mongodb.output.uri", "mongodb://localhost:27017/")
       .set("spark.mongodb.input.database", "local")
-      .set("spark.mongodb.input.collection", "prueba")
+      .set("spark.mongodb.input.collection", "OLAPCubes")
       .set("spark.mongodb.output.database", "local")
-      .set("spark.mongodb.output.collection", "prueba")
+      .set("spark.mongodb.output.collection", "OLAPCubes")
       .set("spark.app.id", "Mongo")
 
     val sc = new SparkContext(conf)
@@ -44,11 +44,12 @@ class Consumer {
       Subscribe[String, String](topics, kafkaParams)
     )
 
-    val values = stream.map(record=>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
-    values.saveAsTextFiles("hdfs:/taxiData", "parquet")
+    val values = stream.map(record =>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
+    values.saveAsTextFiles("hdfs:/taxi/taxiData", "parquet")
 
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
+
 
     stream.map(record => (record.key, Tuple5(
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
