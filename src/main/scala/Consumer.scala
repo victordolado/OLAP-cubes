@@ -50,11 +50,11 @@ class Consumer {
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
 
-    val values = stream.map(record =>  parse(record.value()).values.asInstanceOf[Map[String, Double]])
+    val values = stream.map(record =>  (record.key(), parse(record.value()).values.asInstanceOf[Map[String, Double]]))
 
     values.foreachRDD(rdd => if(!rdd.partitions.isEmpty)
-      rdd.map(x => (x("diff_pickup_dropoff"), x("passenger_count"), x("trip_distance"), x("total_amount")))
-      .toDF("diff_pickup_dropoff", "passenger_count", "trip_distance", "total_amount")
+      rdd.map(x => (x._1, x._2("diff_pickup_dropoff"), x._2("passenger_count"), x._2("trip_distance"), x._2("total_amount")))
+      .toDF("day", "diff_pickup_dropoff", "passenger_count", "trip_distance", "total_amount")
       .write.format("parquet").mode("append").save("/taxisDF/"))
 
     stream.map(record => (record.key, Tuple5(
