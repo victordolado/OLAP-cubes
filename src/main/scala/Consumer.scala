@@ -9,12 +9,14 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import com.mongodb.spark.sql._
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.{SQLContext}
 
 
 class Consumer {
 
   def consumeFromKafka(topic: String) {
+
+
     val conf = new SparkConf().setAppName("streamingApp").setMaster("local[4]")
       .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
       .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
@@ -26,6 +28,7 @@ class Consumer {
       .set("spark.mongodb.output.database", "local")
       .set("spark.mongodb.output.collection", "OLAPCubes")
       .set("spark.app.id", "Mongo")
+
 
     val sc = new SparkContext(conf)
     val ssc = new StreamingContext(sc, Seconds(1))
@@ -44,12 +47,15 @@ class Consumer {
       Subscribe[String, String](topics, kafkaParams)
     )
 
-    val values = stream.map(record =>  parse(record.value()).values.asInstanceOf[Map[String, Any]])
-    values.saveAsTextFiles("hdfs:/taxi/taxiData", "parquet")
-
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
 
+    val values = stream.map(record =>  parse(record.value()).values.asInstanceOf[Map[String, Double]])
+
+    values.foreachRDD(rdd => if(!rdd.partitions.isEmpty)
+      rdd.map(x => (x("diff_pickup_dropoff"), x("passenger_count"), x("trip_distance"), x("total_amount")))
+      .toDF("diff_pickup_dropoff", "passenger_count", "trip_distance", "total_amount")
+      .write.format("parquet").mode("append").save("/taxisDF/"))
 
     stream.map(record => (record.key, Tuple5(
       parse(record.value()).values.asInstanceOf[Map[String, Double]]("diff_pickup_dropoff"),
