@@ -1,4 +1,4 @@
-## OLAP-CUBES
+## OLAP cubes creation with Apache Kafka and Apache Spark
 ### Project description
 
 <div style="text-align: justify">
