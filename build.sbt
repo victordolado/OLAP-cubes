@@ -20,4 +20,9 @@ dependencyOverrides ++= {
 }
 
 libraryDependencies += "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.4.6"
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.9.0"
+libraryDependencies += "org.mongodb.spark" %% "mongo-spark-connector" % "3.0.0"
 
+
+// set the main class for 'sbt run'
+mainClass in (Compile, run) := Some("KafkaStreaming.StreamingProgram")
