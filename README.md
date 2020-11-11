@@ -27,7 +27,7 @@ Move to root directory and run the following commands in the terminal
 
 `sbt compile`
 
-`sbt run KafkaStreaming.StreamingProgram`
+`sbt run`
 
 ### Program description and expected results
 
