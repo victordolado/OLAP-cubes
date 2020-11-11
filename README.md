@@ -27,7 +27,7 @@ Move to root directory and run the following commands in the terminal
 
 `sbt compile`
 
-`sbt run target/scala-2.12/classes/KafkaStreaming/StreamingProgram.class`
+`sbt run KafkaStreaming.StreamingProgram`
 
 ### Program description and expected results
 
