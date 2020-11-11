@@ -52,7 +52,7 @@ Once the data is sent to the topic, it is processed. The processing consists of 
 
    ![](/src/main/docImages/taxiDataHDFS.png)
 
-   ![HDFSDataValues](/src/main/docImages/HDFSDataValues.png)
+   ![HDFSDataFrameValues](/src/main/docImages/HDFSDataFrameValues.png)
 
 2. On the other hand, the following transformations are carried out. The data is grouped by the "day" key and then the following calculations are done:
 * **The average of each trip duration**
