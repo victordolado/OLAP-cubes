@@ -7,7 +7,7 @@ One of the most expensive processes in Big Data environments and analytics envir
 
 ### Project configuration
 
-* Set up Apache Kafka and MongoDB run the following command.
+* Set up Apache Kafka and MongoDB running the following command.
 
     ` docker-compose -f src/main/configuration/project-compose.yml up -d`
 
