@@ -9,7 +9,7 @@ One of the most expensive processes in Big Data environments and analytics envir
 
 * Set up Apache Kafka and MongoDB run the following command.
 
-    ` docker-compose -f src/main/configuration/project-compose.yml`
+    ` docker-compose -f src/main/configuration/project-compose.yml up -d`
 
 
 * Launch a Docker container for single HDFS node
