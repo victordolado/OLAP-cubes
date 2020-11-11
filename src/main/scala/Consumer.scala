@@ -19,7 +19,6 @@ class Consumer {
 
     val conf = new SparkConf().setAppName("streamingApp").setMaster("local[4]")
       .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
-      .set("spark.hadoop.fs.defaultFS", "hdfs://localhost:8020")
       .set("mapreduce.fileoutputcommitter.algorithm.version", "2")
       .set("spark.mongodb.input.uri", "mongodb://localhost:27017/")
       .set("spark.mongodb.output.uri", "mongodb://localhost:27017/")
