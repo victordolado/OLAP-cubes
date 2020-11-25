@@ -4,11 +4,12 @@
 <div style="text-align: justify">
 One of the most expensive processes in Big Data environments and analytics environments in general, is having to perform "full-scan" operations to obtain metrics and data analysis. That is why the generation of OLAP cubes, when it is possible, for grouping data in real time, and before being persisted, it is one of the most used techniques in environments with data lakes. Thus, the idea is to create a Spark Streaming application that receives data through Apache Kafka and, based on a configuration, generate OLAP cubes and persist them in MongoDB. On the other hand, the "raw" data will be persisted in HDFS with Apache Parquet format. The objective is the acceleration of queries through the on-the-fly calculation of data in streaming before being persisted.
 </div>
+
 ### Project architecture
 
-Real-time event processing architecture.
+Real-time event processing project architecture.
 
-![TFMSchema](/home/usuario/Documentos/repositories/OLAP-cubes/src/main/docImages/TFMSchema.png)
+![TFMSchema](/src/main/docImages/TFMSchema.png)
 
 ### Project configuration
 
@@ -40,19 +41,20 @@ The source data could be taken from:
 
 https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 
-The source data resumed for this project is stored in the following path:
+The source data sample for this project is stored in the following path:
 
 ​		`src/main/source/yellow_taxis_resume.csv`
 
 The following columns are selected from the csv file:
 
 * **day**
-* **diff_pickup_dropoff**
+* **tpep_pickup_datetime**
+* **tpep_dropoff_datetime**
 * **passenger_count**
 * **trip_distance**
 * **total_amount** 
 
-A basic parsing of the data is carried out to send them to the kafka topic called "taxiTopic" with the following format:
+The columns "tpep_pickup_datetime" and "tpep_dropoff_datetime" are transformed to calculate the total time of the taxi trip duration. This output column is called "diff_pickup_dropoff". Then a basic parsing of the data is carried out to send them to the kafka topic called "taxiTopic" with the following format:
 
 <img src="/src/main/docImages/taxiTopicAllData.png" alt="taxiTopicAllData" style="zoom:67%;" />
 
@@ -88,4 +90,4 @@ The data stored in the /taxisDF/ path in HDFS could be transformed to obtain the
 
 The execution of the program returns the following dataframe.
 
-![](/home/usuario/Documentos/repositories/OLAP-cubes/src/main/docImages/HDFSTransformedData.png)
+![](/src/main/docImages/HDFSTransformedData.png)
