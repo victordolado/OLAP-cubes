@@ -43,7 +43,7 @@ https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 
 The source data sample for this project is stored in the following path:
 
-​		`src/main/source/yellow_taxis_resume.csv`
+​		`src/main/source/yellow_taxis_sample.csv`
 
 The following columns are selected from the csv file:
 
