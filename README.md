@@ -8,7 +8,7 @@ One of the most expensive processes in Big Data environments and analytics envir
 
 Real-time event processing architecture.
 
-(IMAGEN)
+![TFMSchema](/home/usuario/Documentos/repositories/OLAP-cubes/src/main/docImages/TFMSchema.png)
 
 ### Project configuration
 
@@ -38,9 +38,9 @@ Move to root directory and run the following commands in the terminal
 
 The source data could be taken from:
 
-(Link)
+https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 
-The source data is stored in the following path:
+The source data resumed for this project is stored in the following path:
 
 ​		`src/main/source/yellow_taxis_resume.csv`
 
@@ -88,4 +88,4 @@ The data stored in the /taxisDF/ path in HDFS could be transformed to obtain the
 
 The execution of the program returns the following dataframe.
 
-(imagen)
+![](/home/usuario/Documentos/repositories/OLAP-cubes/src/main/docImages/HDFSTransformedData.png)
