@@ -5,7 +5,7 @@ import consumer.Consumer
 object StreamingProgram extends App {
   val produce = new Producer()
   val consume = new Consumer()
-  produce.writeToKafka(topic="taxiTopic", filePath="src/main/source/yellow_taxis_resume.csv", separator = ",")
+  produce.writeToKafka(topic="taxiTopic", filePath="src/main/source/yellow_taxis_sample.csv", separator = ",")
   consume.consumeFromKafka(topic="taxiTopic")
 
 }
