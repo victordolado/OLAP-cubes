@@ -4,6 +4,11 @@
 <div style="text-align: justify">
 One of the most expensive processes in Big Data environments and analytics environments in general, is having to perform "full-scan" operations to obtain metrics and data analysis. That is why the generation of OLAP cubes, when it is possible, for grouping data in real time, and before being persisted, it is one of the most used techniques in environments with data lakes. Thus, the idea is to create a Spark Streaming application that receives data through Apache Kafka and, based on a configuration, generate OLAP cubes and persist them in MongoDB. On the other hand, the "raw" data will be persisted in HDFS with Apache Parquet format. The objective is the acceleration of queries through the on-the-fly calculation of data in streaming before being persisted.
 </div>
+### Project architecture
+
+Real-time event processing architecture.
+
+(IMAGEN)
 
 ### Project configuration
 
@@ -31,12 +36,17 @@ Move to root directory and run the following commands in the terminal
 
 ### Program description and expected results
 
-The initial data is stored in the following path:
+The source data could be taken from:
+
+(Link)
+
+The source data is stored in the following path:
 
 ​		`src/main/source/yellow_taxis_resume.csv`
 
 The following columns are selected from the csv file:
 
+* **day**
 * **diff_pickup_dropoff**
 * **passenger_count**
 * **trip_distance**
@@ -63,3 +73,19 @@ Once the data is sent to the topic, it is processed. The processing consists of 
 Then, these transformations are ingested in MongoDB in the OLAPCubes collection.
 
 <img src="/src/main/docImages/mongoDBOLAP.png" alt="mongoDBOLAP" style="zoom: 80%;" />
+
+
+
+### HDFS data transformations
+
+The data stored in the /taxisDF/ path in HDFS could be transformed to obtain the same data as in the OLAP cubes. To transform the data the following commands must be executed:
+
+​		`sbt compile`
+
+​		`sbt run` 
+
+​		`sbt "runMain timeDuration.TimeProgram"`
+
+The execution of the program returns the following dataframe.
+
+(imagen)
