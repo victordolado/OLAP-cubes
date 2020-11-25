@@ -60,7 +60,7 @@ The columns "tpep_pickup_datetime" and "tpep_dropoff_datetime" are transformed t
 
 Once the data is sent to the topic, it is processed. The processing consists of two parts:
 
-1. On the one hand, the raw data is saved in HDFS in the root directory with the name of taxiData in Parquet format. 
+1. On the one hand, the raw data is stored in HDFS in the /taxisDF/ path as a dataframe in parquet format. 
 
    ![](/src/main/docImages/taxiDataHDFS.png)
 
@@ -72,7 +72,7 @@ Once the data is sent to the topic, it is processed. The processing consists of 
 * **The average of each trip distance**
 * **The average of each trip price**
 
-Then, these transformations are ingested in MongoDB in the OLAPCubes collection.
+Then, these transformations are ingested in MongoDB in the OLAPCubes collection of the local database.
 
 <img src="/src/main/docImages/mongoDBOLAP.png" alt="mongoDBOLAP" style="zoom: 80%;" />
 
